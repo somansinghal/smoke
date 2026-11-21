@@ -1,0 +1,228 @@
+/* SmogWise Responsive & Accessibility Styles */
+
+/* =========================================
+   1. TABLET BREAKPOINTS (<= 992px)
+   ========================================= */
+@media (max-width: 992px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .hero-visual {
+    order: -1;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer-brand {
+    grid-column: span 2;
+  }
+}
+
+/* =========================================
+   2. MOBILE BREAKPOINTS (<= 768px)
+   ========================================= */
+@media (max-width: 768px) {
+  .site-header {
+    padding: 0.25rem 0;
+  }
+
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .brand-logo {
+    height: 36px;
+  }
+
+  .brand-title {
+    font-size: 1.2rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.72rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 0.25rem;
+    overflow-x: auto;
+  }
+
+  .btn {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .hero-content h1 {
+    font-size: 1.7rem;
+  }
+
+  .hero-lead {
+    font-size: 1rem;
+  }
+
+  .search-input-group {
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .search-input-group .btn {
+    width: 100%;
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+  }
+
+  .aqi-metric-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .aqi-number-ring {
+    width: 100px;
+    height: 100px;
+  }
+
+  .aqi-value {
+    font-size: 2.3rem;
+  }
+
+  .weather-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .weather-condition-display {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .pollutants-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .footer-brand {
+    grid-column: span 1;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* =========================================
+   3. SMALL MOBILE (<= 480px)
+   ========================================= */
+@media (max-width: 480px) {
+  .pollutants-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-cities {
+    gap: 0.35rem;
+  }
+
+  .chip {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.78rem;
+  }
+
+  .station-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .location-name {
+    font-size: 1.35rem;
+  }
+
+  .weather-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   4. REDUCED MOTION PREFERENCES
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Swap animated GIF with static logo image */
+  .hero-gif {
+    display: none !important;
+  }
+
+  .hero-static-fallback {
+    display: block !important;
+  }
+
+  .spinner {
+    animation: none !important;
+    border: 2px solid #ffffff !important;
+  }
+}
+
+/* =========================================
+   5. HIGH CONTRAST & ACCESSIBILITY
+   ========================================= */
+@media (forced-colors: active) {
+  .btn, .chip, .card, .rec-card, .pollutant-card {
+    border: 1px solid ButtonText !important;
+  }
+  
+  :focus-visible {
+    outline: 3px solid Highlight !important;
+  }
+}
+
+/* Print styling */
+@media print {
+  .site-header, .search-box-wrapper, .quick-cities, .station-actions, .modal-backdrop, .toast-container, .site-footer {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .card, .rec-card, .pollutant-card {
+    box-shadow: none !important;
+    border: 1px solid #cccccc !important;
+    break-inside: avoid;
+  }
+}

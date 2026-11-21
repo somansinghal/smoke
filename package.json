@@ -1,0 +1,26 @@
+{
+  "name": "smogwise",
+  "version": "1.0.0",
+  "description": "SmogWise - Breathe better. Live wiser. Environmental-health air quality and weather companion.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
+  },
+  "keywords": [
+    "air-quality",
+    "aqi",
+    "weather",
+    "open-meteo",
+    "waqi",
+    "environmental-health",
+    "vanilla-js"
+  ],
+  "author": "SmogWise Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "playwright": "^1.40.0"
+  }
+}

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmogWise — Breathe better. Live wiser.</title>
+  <meta name="description" content="SmogWise provides real-time air quality index (AQI), weather forecasts, and explainable personalized health do's and don'ts for your daily life.">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Keyboard Navigation Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Global Header -->
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="#" class="brand-wrapper" aria-label="SmogWise Home - Breathe better. Live wiser.">
+        <img src="logo.png" alt="SmogWise Leaf & Breath Logo" class="brand-logo" width="120" height="44">
+        <div class="brand-text">
+          <span class="brand-title">SmogWise</span>
+          <span class="brand-tagline">Breathe better. Live wiser.</span>
+        </div>
+      </a>
+
+      <nav class="header-actions" aria-label="Quick Actions">
+        <button id="btn-header-locate" class="btn btn-primary" aria-label="Locate me and check current air quality">
+          <span class="btn-icon-symbol" aria-hidden="true">📍</span>
+          <span>Check my air</span>
+        </button>
+
+        <button id="btn-household-profile" class="btn btn-secondary" aria-label="Customize household profile for personalized advice">
+          <span aria-hidden="true">🏡</span>
+          <span>Household</span>
+          <span id="household-active-badge" class="badge badge-live" style="display:none;">Active</span>
+        </button>
+
+        <button id="btn-open-guide" class="btn btn-outline" aria-label="Open AQI and pollutant educational guide">
+          <span aria-hidden="true">📖</span>
+          <span>AQI Guide</span>
+        </button>
+
+        <button id="btn-open-settings" class="btn btn-icon" title="Settings & Data Preferences" aria-label="Settings & Data Preferences">
+          <span aria-hidden="true">⚙️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main id="main-content" role="main">
+    
+    <!-- Hero & Search Section -->
+    <section class="hero-section" aria-labelledby="hero-heading">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <h1 id="hero-heading">Know what you breathe.<br>Plan with confidence.</h1>
+          <p class="hero-lead">
+            Hyperlocal weather and air quality combined with transparent, science-backed guidance to protect your lungs and home.
+          </p>
+
+          <!-- Search & Geolocation Box -->
+          <div class="search-box-wrapper">
+            <form id="city-search-form" class="search-input-group" role="search">
+              <span class="search-icon-prefix" aria-hidden="true">🔍</span>
+              <input 
+                type="text" 
+                id="search-input" 
+                class="search-input" 
+                placeholder="Search city or neighborhood (e.g., Delhi, London, Tokyo)..." 
+                autocomplete="off"
+                aria-label="Search city or location"
+                aria-expanded="false"
+                aria-autocomplete="list"
+                aria-controls="search-dropdown-list"
+              >
+              <button type="button" id="btn-hero-locate" class="btn btn-primary" title="Detect location automatically via browser GPS">
+                <span aria-hidden="true">📍</span>
+                <span>Use my location</span>
+              </button>
+            </form>
+
+            <!-- Autocomplete suggestions dropdown -->
+            <ul id="search-dropdown-list" class="search-dropdown" role="listbox" aria-label="City suggestions"></ul>
+          </div>
+
+          <!-- Quick City Chips & Demo Selector -->
+          <div class="quick-cities" aria-label="Popular cities and test scenarios">
+            <span class="quick-label">Try:</span>
+            <button type="button" class="chip quick-city-chip" data-lat="28.6139" data-lng="77.2090" data-name="New Delhi, India">New Delhi</button>
+            <button type="button" class="chip quick-city-chip" data-lat="51.5074" data-lng="-0.1278" data-name="London, UK">London</button>
+            <button type="button" class="chip quick-city-chip" data-lat="40.7128" data-lng="-74.0060" data-name="New York, USA">New York</button>
+            <button type="button" class="chip quick-city-chip" data-lat="35.6762" data-lng="139.6503" data-name="Tokyo, Japan">Tokyo</button>
+            <button type="button" class="chip quick-city-chip" data-lat="34.0522" data-lng="-118.2437" data-name="Los Angeles, USA">Los Angeles</button>
+
+            <!-- Demo Mode Selector -->
+            <label for="demo-select" class="sr-only">Switch Demo Preset</label>
+            <select id="demo-select" class="chip" style="cursor:pointer;font-weight:600;background:#fef3c7;border-color:#fde68a;color:#92400e;" title="Load test scenarios with mock data">
+              <option value="">🧪 Demo Scenarios...</option>
+              <option value="good">🟢 Good (Honolulu - AQI 24)</option>
+              <option value="moderate">🟡 Moderate (London - AQI 72)</option>
+              <option value="sensitive">🟠 Sensitive Groups (LA - AQI 128)</option>
+              <option value="unhealthy">🔴 Unhealthy (Delhi - AQI 188)</option>
+              <option value="hazardous">🟣 Hazardous (Wildfire - AQI 348)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Hero Visual (Reusing provided GIF / Logo with reduced-motion fallback) -->
+        <div class="hero-visual">
+          <img 
+            src="Gemini_Generated_Gif_qn92k2qn92k2qn92.gif" 
+            alt="Animated illustration of breathing clean air in an open landscape" 
+            class="hero-gif"
+            loading="eager"
+          >
+          <img 
+            src="logo.png" 
+            alt="SmogWise clean air badge" 
+            class="hero-static-fallback"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Live Dashboard -->
+    <div class="container">
+      
+      <!-- Station Header & Live Status Bar -->
+      <section class="station-header-bar" aria-label="Current Station Information">
+        <div class="station-meta">
+          <div class="station-title-row">
+            <h2 id="location-display-name" class="location-name">Loading local air...</h2>
+            <span id="data-source-badge" class="badge badge-live">Live Ground Station</span>
+          </div>
+          <p class="station-details">
+            <span id="station-reporting-name">Locating nearest sensor...</span> • 
+            <span id="station-update-time">Updating</span> • 
+            <span id="station-scale-badge">Scale: US EPA AQI Standard</span>
+          </p>
+        </div>
+
+        <div class="station-actions">
+          <button id="btn-refresh-data" class="btn btn-secondary" title="Fetch latest station and weather updates" aria-label="Refresh data">
+            <span id="refresh-icon" aria-hidden="true">🔄</span>
+            <span id="refresh-text">Refresh</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Special Notice Banner for India Users (CPCB NAQI distinction) -->
+      <div id="cpcb-banner-container" class="cpcb-banner" role="note" style="display:none;">
+        <span class="cpcb-banner-icon" aria-hidden="true">🇮🇳</span>
+        <div>
+          <strong>Note for India:</strong> The value above is calculated using the <em>US EPA AQI Standard</em> as reported by WAQI. India's official National AQI (NAQI) uses different category bands and PM breakpoints. For official statutory national advisories, visit the <a href="https://airquality.cpcb.gov.in/AQI_India/" target="_blank" rel="noopener noreferrer" class="cpcb-link">CPCB Central Air Quality Portal (Sameer)</a>.
+        </div>
+      </div>
+
+      <!-- Forecast / Model Notice (when ground sensor is absent) -->
+      <div id="model-notice-container" class="info-note-bar" style="display:none;" role="note">
+        <span aria-hidden="true">📡</span>
+        <span id="model-notice-text">
+          Showing <strong>Numerical Forecast Model (Copernicus CAMS via Open-Meteo)</strong>. This is an atmospheric projection model, not a direct real-time ground sensor measurement.
+        </span>
+      </div>
+
+      <!-- Primary Metrics Grid (AQI Card + Weather Card) -->
+      <div class="dashboard-grid">
+        
+        <!-- Primary AQI Card -->
+        <article id="main-aqi-card" class="card aqi-card" aria-labelledby="aqi-card-heading">
+          <div>
+            <div class="aqi-header-row">
+              <h3 id="aqi-card-heading">Air Quality Index</h3>
+              <span id="aqi-scale-text" class="aqi-scale-badge">US EPA Standard</span>
+            </div>
+
+            <div class="aqi-metric-display">
+              <div id="aqi-ring" class="aqi-number-ring">
+                <span id="aqi-value" class="aqi-value">--</span>
+                <span class="aqi-label-sub">AQI</span>
+              </div>
+
+              <div class="aqi-category-info">
+                <div class="aqi-category-pill">
+                  <span id="aqi-category-icon" class="cat-icon" aria-hidden="true">🌱</span>
+                  <span id="aqi-category-name">Analyzing Air...</span>
+                </div>
+                <p id="aqi-category-summary" class="aqi-desc">Gathering latest atmospheric readings for your area.</p>
+                <div class="dominant-pollutant-badge">
+                  Dominant Pollutant: <span id="dominant-pollutant-name">PM2.5</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spectrum Bar -->
+          <div class="aqi-spectrum-wrapper" aria-hidden="true">
+            <div class="aqi-spectrum-bar">
+              <div id="aqi-spectrum-indicator" class="aqi-spectrum-indicator" style="left: 10%;"></div>
+            </div>
+            <div class="aqi-scale-labels">
+              <span>0 Good</span>
+              <span>50</span>
+              <span>100 Mod</span>
+              <span>150 Sens</span>
+              <span>200 Unhealthy</span>
+              <span>300+</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Weather Overview Card -->
+        <article class="card weather-card" aria-labelledby="weather-card-heading">
+          <div class="weather-header">
+            <h3 id="weather-card-heading">Local Weather (Open-Meteo)</h3>
+            <button id="btn-toggle-unit" class="weather-unit-toggle" title="Switch between Celsius and Fahrenheit">°C / °F</button>
+          </div>
+
+          <div class="weather-main">
+            <div>
+              <div class="weather-temp-block">
+                <span id="weather-temp" class="weather-temp">--</span>
+                <span id="weather-temp-unit" style="font-size:1.5rem;font-weight:700;color:var(--text-muted);">°C</span>
+              </div>
+              <div class="weather-feels">Feels like <span id="weather-feels">--</span>°</div>
+            </div>
+
+            <div class="weather-condition-display">
+              <span id="weather-condition-icon" class="weather-icon-lg" aria-hidden="true">🌤️</span>
+              <span id="weather-condition-text" class="weather-condition-name">Clear</span>
+            </div>
+          </div>
+
+          <!-- Secondary Weather Metrics -->
+          <div class="weather-metrics-grid">
+            <div class="metric-item">
+              <span class="metric-icon" aria-hidden="true">💧</span>
+              <div class="metric-data">
+                <span class="metric-label">Humidity</span>
+                <span id="weather-humidity" class="metric-value">--%</span>
+              </div>
+            </div>
+
+            <div class="metric-item">
+              <span class="metric-icon" aria-hidden="true">💨</span>
+              <div class="metric-data">
+                <span class="metric-label">Wind</span>
+                <span id="weather-wind" class="metric-value">-- km/h</span>
+              </div>
+            </div>
+
+            <div class="metric-item">
+              <span class="metric-icon" aria-hidden="true">🌧️</span>
+              <div class="metric-data">
+                <span class="metric-label">Precipitation</span>
+                <span id="weather-rain" class="metric-value">0.0 mm</span>
+              </div>
+            </div>
+
+            <div class="metric-item">
+              <span class="metric-icon" aria-hidden="true">🧭</span>
+              <div class="metric-data">
+                <span class="metric-label">Wind Direction</span>
+                <span id="weather-wind-dir" class="metric-value">--</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Pollutant Breakdown Section -->
+      <section aria-labelledby="pollutants-heading">
+        <div class="section-header">
+          <div class="section-title">
+            <span aria-hidden="true">🔬</span>
+            <h2 id="pollutants-heading">Pollutants Breakdown</h2>
+          </div>
+          <button id="btn-explain-pollutants" class="btn btn-secondary" style="font-size:0.8rem;padding:0.35rem 0.75rem;">
+            <span>What does this mean?</span>
+          </button>
+        </div>
+
+        <div id="pollutants-container" class="pollutants-grid">
+          <!-- Dynamically populated pollutant cards (PM2.5, PM10, O3, NO2, SO2, CO) -->
+        </div>
+      </section>
+
+      <!-- Practical Do's & Don'ts Section -->
+      <section class="recommendations-section" aria-labelledby="recs-heading">
+        <div class="recs-header-banner">
+          <div class="recs-header-info">
+            <h2 id="recs-heading">Actionable Do's & Don'ts</h2>
+            <p id="recs-summary" class="recs-subtitle">Tailored protection guidance based on air quality, weather, and household sensitivities.</p>
+          </div>
+
+          <!-- Active household badges -->
+          <div class="household-tags-row">
+            <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);margin-right:0.25rem;">Household:</span>
+            <div id="household-pills-list" style="display:flex;gap:0.35rem;flex-wrap:wrap;">
+              <span class="household-tag">General Adult</span>
+            </div>
+            <button id="btn-edit-household-inline" class="chip" style="cursor:pointer;font-size:0.75rem;" title="Edit sensitive groups">✏️ Edit</button>
+          </div>
+        </div>
+
+        <!-- 4 Domain Recommendation Cards Grid -->
+        <div id="recommendations-cards-grid" class="recs-grid">
+          <!-- Populated by recommendations.js -->
+        </div>
+
+        <!-- Rule Engine / Grok AI Attribution Bar -->
+        <div class="ai-engine-footer">
+          <span class="engine-status-pill">
+            <span aria-hidden="true">🛡️</span>
+            <span id="engine-status-text">Powered by local explainable rules (Zero-cost, 100% private in browser)</span>
+          </span>
+          <span id="recs-update-time" style="font-size:0.75rem;">Updated just now</span>
+        </div>
+      </section>
+
+      <!-- Hourly Forecast & Trend Section -->
+      <section class="forecast-section" aria-labelledby="forecast-heading">
+        <div class="section-header">
+          <div class="section-title">
+            <span aria-hidden="true">📈</span>
+            <h2 id="forecast-heading">Hourly Trend & Forecast (Next 12 Hours)</h2>
+          </div>
+        </div>
+
+        <div class="forecast-notice">
+          <strong>Forecast Projection Note:</strong> Projections below are calculated from <em>Open-Meteo & Copernicus CAMS numerical models</em>. Atmospheric shifts, traffic spikes, or local smoke plumes may cause live ground readings to vary.
+        </div>
+
+        <div class="forecast-scroll-wrapper">
+          <div id="forecast-timeline-container" class="forecast-timeline">
+            <!-- Populated dynamically with hourly forecast cards -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Attribution & Provider Section (WAQI & Data Provider Requirements) -->
+      <section class="card" style="margin-bottom: 2.5rem; background:#fbf9f4;" aria-labelledby="attribution-heading">
+        <h3 id="attribution-heading" style="font-size:1.05rem;margin-bottom:0.75rem;color:var(--color-forest-dark);">
+          Data Sources, Attributions & Scales
+        </h3>
+        <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:0.75rem;line-height:1.5;">
+          SmogWise aggregates station telemetry from the <strong>World Air Quality Index project (WAQI)</strong> and high-resolution numerical meteorology from <strong>Open-Meteo</strong>. All AQI ratings are standardized to the <strong>US EPA Air Quality Index</strong>.
+        </p>
+        <div id="attributions-list" style="display:flex;flex-wrap:wrap;gap:0.75rem;font-size:0.8rem;">
+          <a href="https://waqi.info/" target="_blank" rel="noopener noreferrer" style="color:var(--color-forest-light);font-weight:600;">World Air Quality Index (waqi.info)</a>
+          <span>•</span>
+          <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" style="color:var(--color-forest-light);font-weight:600;">Open-Meteo Weather & Geocoding</a>
+          <span>•</span>
+          <a href="https://airquality.cpcb.gov.in/AQI_India/" target="_blank" rel="noopener noreferrer" style="color:var(--color-forest-light);font-weight:600;">CPCB India National AQI Portal</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      
+      <!-- Informational Disclaimer Note (Requirement #10) -->
+      <div class="disclaimer-box">
+        <strong>Important Informational Notice:</strong> SmogWise is an informational health-literacy tool designed to help you interpret ambient environmental data. It does not measure air quality at your exact indoor room or doorstep, nor does it provide medical diagnosis, clinical treatment plans, or replace official municipal emergency warnings. Always consult local public health authorities and your physician for medical decisions.
+      </div>
+
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>SmogWise</h3>
+          <p>Breathe better. Live wiser. Making environmental science accessible, transparent, and actionable for every household.</p>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="#" id="link-footer-guide">AQI & Pollutants Guide</a></li>
+            <li><a href="#" id="link-footer-household">Household Sensitivity</a></li>
+            <li><a href="#" id="link-footer-locate">Check My Location</a></li>
+            <li><a href="https://airquality.cpcb.gov.in/AQI_India/" target="_blank" rel="noopener noreferrer">India CPCB Portal ↗</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Privacy & Ethics</h4>
+          <ul>
+            <li><span>100% Client-Side Preferences</span></li>
+            <li><span>No Health PII Transmitted</span></li>
+            <li><span>Free Open Source Engine</span></li>
+            <li><span>No AI Key in Frontend</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 SmogWise Project. Built with vanilla HTML, CSS, and JavaScript.</span>
+        <span>Reusing official SmogWise brand assets.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================
+       MODALS & DIALOGS
+       ========================================= -->
+
+  <!-- 1. Location Request Explanation Modal -->
+  <div id="modal-location-explain" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="loc-modal-title">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="loc-modal-title">Why SmogWise requests your location</h3>
+        <button type="button" class="modal-close-btn" data-close="modal-location-explain" aria-label="Close dialog">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:1rem;color:var(--text-main);line-height:1.5;">
+          We use your approximate browser geolocation solely to query the nearest official ground monitoring station (via WAQI) and local weather metrics (via Open-Meteo).
+        </p>
+        <ul style="padding-left:1.25rem;margin-bottom:1rem;color:var(--text-muted);font-size:0.9rem;display:flex;flex-direction:column;gap:0.4rem;">
+          <li>🔒 <strong>Private:</strong> Your GPS coordinates remain in your browser session and are never logged on our servers or sold.</li>
+          <li>🎯 <strong>Station proximity:</strong> Stations are typically within 2–15 km of your location.</li>
+          <li>🚫 <strong>Permission denial:</strong> If you choose not to share, you can easily type any city name in the search box.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close="modal-location-explain">Cancel</button>
+        <button type="button" id="btn-proceed-geolocation" class="btn btn-primary">Proceed with Location</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Household Profile Modal -->
+  <div id="modal-household" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="hh-modal-title">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="hh-modal-title">Household Profile & Sensitivity</h3>
+        <button type="button" class="modal-close-btn" data-close="modal-household" aria-label="Close dialog">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:1.25rem;font-size:0.9rem;color:var(--text-muted);line-height:1.4;">
+          Select any vulnerable groups or activity profiles in your household. SmogWise will adapt your practical do’s and don’ts accordingly.
+          <br><em>Preferences are saved strictly in your browser (localStorage). Never sent to any AI service or server.</em>
+        </p>
+
+        <label class="preference-option">
+          <input type="checkbox" id="pref-children">
+          <div class="pref-text">
+            <strong>Children in household (Under 14)</strong>
+            <span>Children breathe more air per pound of body weight and their developing lungs are more vulnerable to fine particles.</span>
+          </div>
+        </label>
+
+        <label class="preference-option">
+          <input type="checkbox" id="pref-seniors">
+          <div class="pref-text">
+            <strong>Older adults (65+)</strong>
+            <span>Age-related decreases in physiological reserve increase susceptibility to cardiovascular strain during high PM episodes.</span>
+          </div>
+        </label>
+
+        <label class="preference-option">
+          <input type="checkbox" id="pref-sensitive">
+          <div class="pref-text">
+            <strong>Asthma, COPD, or Cardiovascular Sensitivity</strong>
+            <span>Individuals with pre-existing airway hyperreactivity or heart disease requiring tailored exertion limits.</span>
+          </div>
+        </label>
+
+        <label class="preference-option">
+          <input type="checkbox" id="pref-athlete">
+          <div class="pref-text">
+            <strong>Outdoor Runner, Cyclist, or Commuter</strong>
+            <span>Deep mouth breathing during high-intensity aerobic exercise bypasses nasal filtration and pulls pollutants deeper.</span>
+          </div>
+        </label>
+
+        <label class="preference-option">
+          <input type="checkbox" id="pref-gascooking">
+          <div class="pref-text">
+            <strong>Cooking with Gas Stove / Open Flame</strong>
+            <span>Gas combustion releases indoor NO2 and ultrafine particles; triggers tailored kitchen ventilation advice.</span>
+          </div>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close="modal-household">Cancel</button>
+        <button type="button" id="btn-save-household" class="btn btn-primary">Save Preferences</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Educational Guide Modal ("What does this mean?") -->
+  <div id="modal-educational-guide" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
+    <div class="modal-container" style="max-width:720px;">
+      <div class="modal-header">
+        <h3 id="guide-modal-title">Air Quality & Pollutants Guide</h3>
+        <button type="button" class="modal-close-btn" data-close="modal-educational-guide" aria-label="Close dialog">×</button>
+      </div>
+      <div class="modal-body">
+        
+        <h4 style="margin-bottom:0.5rem;color:var(--color-forest-dark);">1. The US EPA AQI Scale</h4>
+        <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.4;">
+          The Air Quality Index (AQI) converts complex pollutant concentrations into a simple 0 to 500 scale. The higher the AQI value, the greater the level of air pollution and the greater the health concern.
+        </p>
+
+        <!-- AQI Categories Table -->
+        <div style="overflow-x:auto;margin-bottom:1.5rem;">
+          <table style="width:100%;border-collapse:collapse;font-size:0.825rem;text-align:left;">
+            <thead>
+              <tr style="background:#f4efe6;border-bottom:2px solid var(--border-light);">
+                <th style="padding:0.5rem;">AQI Range</th>
+                <th style="padding:0.5rem;">Category</th>
+                <th style="padding:0.5rem;">Meaning & Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border-light);background:#ecfdf5;">
+                <td style="padding:0.5rem;font-weight:700;color:#065f46;">0 – 50</td>
+                <td style="padding:0.5rem;font-weight:700;color:#065f46;">Good</td>
+                <td style="padding:0.5rem;">Air quality is satisfactory; air pollution poses little or no risk.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border-light);background:#fefce8;">
+                <td style="padding:0.5rem;font-weight:700;color:#78350f;">51 – 100</td>
+                <td style="padding:0.5rem;font-weight:700;color:#78350f;">Moderate</td>
+                <td style="padding:0.5rem;">Acceptable quality; unusually sensitive people should consider reducing exertion.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border-light);background:#fff7ed;">
+                <td style="padding:0.5rem;font-weight:700;color:#7c2d12;">101 – 150</td>
+                <td style="padding:0.5rem;font-weight:700;color:#7c2d12;">Unhealthy for Sensitive Groups</td>
+                <td style="padding:0.5rem;">Children, older adults, and individuals with respiratory issues should limit prolonged exertion.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border-light);background:#fef2f2;">
+                <td style="padding:0.5rem;font-weight:700;color:#7f1d1d;">151 – 200</td>
+                <td style="padding:0.5rem;font-weight:700;color:#7f1d1d;">Unhealthy</td>
+                <td style="padding:0.5rem;">Everyone may begin to experience health effects; sensitive groups more severe.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border-light);background:#f5f3ff;">
+                <td style="padding:0.5rem;font-weight:700;color:#4c1d95;">201 – 300</td>
+                <td style="padding:0.5rem;font-weight:700;color:#4c1d95;">Very Unhealthy</td>
+                <td style="padding:0.5rem;">Health alert: increased risk of health effects for entire population.</td>
+              </tr>
+              <tr style="background:#fff1f2;">
+                <td style="padding:0.5rem;font-weight:700;color:#4c0519;">301 – 500</td>
+                <td style="padding:0.5rem;font-weight:700;color:#4c0519;">Hazardous</td>
+                <td style="padding:0.5rem;">Health warning of emergency conditions. Entire population is affected.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="margin-bottom:0.5rem;color:var(--color-forest-dark);">2. Understanding Individual Pollutants</h4>
+        <div id="guide-pollutants-list" style="display:flex;flex-direction:column;gap:1rem;margin-bottom:1.5rem;">
+          <!-- Populated from AQI_SCALE.POLLUTANTS -->
+        </div>
+
+        <h4 style="margin-bottom:0.5rem;color:var(--color-forest-dark);">3. Note on India National AQI (CPCB)</h4>
+        <div class="cpcb-banner">
+          <span class="cpcb-banner-icon" aria-hidden="true">🇮🇳</span>
+          <div style="font-size:0.85rem;line-height:1.4;">
+            WAQI uses the <strong>US EPA AQI standard</strong> to normalize international measurements. India’s Central Pollution Control Board (CPCB) operates its own <strong>National Air Quality Index (NAQI)</strong> with 6 bands: Good (0-50), Satisfactory (51-100), Moderately Polluted (101-200), Poor (201-300), Very Poor (301-400), and Severe (401-500).
+            Because the 24-hour concentration breakpoints differ, a US AQI value of 150 is not identical to an Indian NAQI score of 150.
+            <div style="margin-top:0.4rem;">
+              <a href="https://airquality.cpcb.gov.in/AQI_India/" target="_blank" rel="noopener noreferrer" class="cpcb-link">Visit Official CPCB Air Quality Portal ↗</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-close="modal-educational-guide">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Settings & Custom WAQI Token Modal -->
+  <div id="modal-settings" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="settings-modal-title">Settings & API Configuration</h3>
+        <button type="button" class="modal-close-btn" data-close="modal-settings" aria-label="Close dialog">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:1.25rem;">
+          <label for="custom-waqi-token" style="display:block;font-size:0.9rem;font-weight:700;margin-bottom:0.35rem;color:var(--color-forest-dark);">
+            Optional: Personal WAQI API Token
+          </label>
+          <input 
+            type="text" 
+            id="custom-waqi-token" 
+            placeholder="e.g. 59f2c..." 
+            class="search-input" 
+            style="width:100%;border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:0.6rem;background:#fff;"
+          >
+          <span style="font-size:0.8rem;color:var(--text-muted);display:block;margin-top:0.25rem;">
+            SmogWise includes a public demo token by default. You can get your own free community token at <a href="https://aqicn.org/data-platform/token/" target="_blank" rel="noopener noreferrer">aqicn.org/data-platform/token/</a>.
+          </span>
+        </div>
+
+        <div style="margin-bottom:1.25rem;">
+          <span style="display:block;font-size:0.9rem;font-weight:700;margin-bottom:0.35rem;color:var(--color-forest-dark);">
+            Temperature Display Unit
+          </span>
+          <div style="display:flex;gap:1rem;">
+            <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+              <input type="radio" name="temp-unit" value="C" checked>
+              <span>Celsius (°C)</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+              <input type="radio" name="temp-unit" value="F">
+              <span>Fahrenheit (°F)</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="background:#f4efe6;border-radius:var(--radius-sm);padding:0.75rem;font-size:0.825rem;color:var(--text-muted);">
+          <strong>AI Proxy Status:</strong> Grok AI calls require a paid xAI API key set as an environment variable on the backend proxy server (`XAI_API_KEY`). Browser JavaScript never holds the key. If not configured, SmogWise automatically uses its local explainable rule engine for free.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close="modal-settings">Cancel</button>
+        <button type="button" id="btn-save-settings" class="btn btn-primary">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Core JavaScript Modules (Plain Vanilla JS) -->
+  <script src="js/config.js"></script>
+  <script src="js/aqi-scale.js"></script>
+  <script src="js/demo-data.js"></script>
+  <script src="js/recommendations.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/grok-client.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
