@@ -25,8 +25,8 @@
   <meta name="twitter:image" content="https://smokewise.vercel.app/logo.png">
 
   <!-- Favicons and Theme Color -->
-  <link rel="icon" type="image/png" href="logo.png">
-  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="apple-touch-icon" href="/logo.png">
   <meta name="theme-color" content="#1b4332">
 
   <!-- Structured Data (Schema.org JSON-LD) -->
@@ -72,9 +72,9 @@
   </script>
 
   <!-- Core Stylesheets -->
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/responsive.css">
 </head>
 <body>
   <!-- Keyboard Navigation Skip Link -->
@@ -84,7 +84,7 @@
   <header class="site-header" role="banner">
     <div class="container nav-container">
       <a href="#" class="brand-wrapper" aria-label="SmogWise Home - Breathe better. Live wiser.">
-        <img src="logo.png" alt="SmogWise Leaf & Breath Logo" class="brand-logo" width="120" height="44">
+        <img src="/logo.png" alt="SmogWise Leaf & Breath Logo" class="brand-logo" width="120" height="44">
         <div class="brand-text">
           <span class="brand-title">SmogWise</span>
           <span class="brand-tagline">Breathe better. Live wiser.</span>
@@ -178,13 +178,13 @@
         <!-- Hero Visual (Reusing provided GIF / Logo with reduced-motion fallback) -->
         <div class="hero-visual">
           <img 
-            src="Gemini_Generated_Gif_qn92k2qn92k2qn92.gif" 
+            src="/Gemini_Generated_Gif_qn92k2qn92k2qn92.gif" 
             alt="Animated illustration of breathing clean air in an open landscape" 
             class="hero-gif"
             loading="eager"
           >
           <img 
-            src="logo.png" 
+            src="/logo.png" 
             alt="SmogWise clean air badge" 
             class="hero-static-fallback"
           >
@@ -378,7 +378,7 @@
           <!-- Populated by recommendations.js -->
         </div>
 
-        <!-- Rule Engine / Grok AI Attribution Bar -->
+        <!-- Rule Engine / Groq AI Attribution Bar -->
         <div class="ai-engine-footer">
           <span class="engine-status-pill">
             <span aria-hidden="true">🛡️</span>
@@ -722,7 +722,7 @@
         </div>
 
         <div style="background:#f4efe6;border-radius:var(--radius-sm);padding:0.75rem;font-size:0.825rem;color:var(--text-muted);">
-          <strong>AI Proxy Status:</strong> Grok AI calls require a paid xAI API key set as an environment variable on the backend proxy server (`XAI_API_KEY`). Browser JavaScript never holds the key. If not configured, SmogWise automatically uses its local explainable rule engine for free.
+          <strong>AI Proxy Status:</strong> Groq AI calls require a `GROQ_API_KEY` environment variable on the server-side proxy (Vercel or local `server.js`). Browser JavaScript never holds the key. If not configured, SmogWise automatically uses its local explainable rule engine for free.
         </div>
       </div>
       <div class="modal-footer">
@@ -736,12 +736,12 @@
   <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Core JavaScript Modules (Plain Vanilla JS) -->
-  <script src="js/config.js"></script>
-  <script src="js/aqi-scale.js"></script>
-  <script src="js/demo-data.js"></script>
-  <script src="js/recommendations.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/grok-client.js"></script>
-  <script src="js/app.js"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/aqi-scale.js"></script>
+  <script src="/js/demo-data.js"></script>
+  <script src="/js/recommendations.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/groq-client.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>

@@ -1,10 +1,10 @@
-// Vercel Serverless Function: /api/grok/recommendations
-// Optional Grok AI proxy: zero PII, zero client-side keys
+// Vercel Serverless Function: /api/groq/recommendations
+// Optional Groq AI proxy: zero PII, zero client-side keys
 
 const https = require('https');
 
 module.exports = (req, res) => {
-  const GROK_API_KEY = process.env.GROK_API_KEY || process.env.XAI_API_KEY || '';
+  const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -23,13 +23,13 @@ module.exports = (req, res) => {
     return;
   }
 
-  if (!GROK_API_KEY) {
+  if (!GROQ_API_KEY) {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({
       enabled: false,
       source: 'local_rule_engine',
-      message: 'Grok API key is not configured on the server. SmogWise is running in zero-cost, privacy-first mode using its local explainable rule engine.'
+      message: 'Groq API key is not configured on the server. SmogWise is running in zero-cost, privacy-first mode using its local explainable rule engine.'
     }));
     return;
   }
@@ -79,36 +79,38 @@ Format strictly as JSON with this schema:
 }`;
 
       const postData = JSON.stringify({
-        model: 'grok-2-latest',
+        model: 'llama-3.3-70b-versatile',
         messages: [
-          { role: 'system', content: 'You are an environmental health advisor specializing in clean air guidelines.' },
+          { role: 'system', content: 'You are an environmental health advisor specializing in clean air guidelines. Respond with valid JSON only.' },
           { role: 'user', content: promptText }
         ],
         temperature: 0.3,
         response_format: { type: 'json_object' }
       });
 
-      const grokReq = https.request('https://api.x.ai/v1/chat/completions', {
+      const groqReq = https.request({
+        hostname: 'api.groq.com',
+        path: '/openai/v1/chat/completions',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${GROK_API_KEY}`,
+          'Authorization': `Bearer ${GROQ_API_KEY}`,
           'Content-Length': Buffer.byteLength(postData)
         },
         timeout: 8000
-      }, (grokRes) => {
-        let grokData = '';
-        grokRes.on('data', chunk => { grokData += chunk; });
-        grokRes.on('end', () => {
-          if (grokRes.statusCode >= 200 && grokRes.statusCode < 300) {
+      }, (groqRes) => {
+        let groqData = '';
+        groqRes.on('data', chunk => { groqData += chunk; });
+        groqRes.on('end', () => {
+          if (groqRes.statusCode >= 200 && groqRes.statusCode < 300) {
             try {
-              const grokJson = JSON.parse(grokData);
-              const reply = grokJson.choices?.[0]?.message?.content;
+              const groqJson = JSON.parse(groqData);
+              const reply = groqJson.choices?.[0]?.message?.content;
               res.statusCode = 200;
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({
                 enabled: true,
-                source: 'grok_ai',
+                source: 'groq_ai',
                 data: JSON.parse(reply)
               }));
             } catch (e) {
@@ -118,7 +120,7 @@ Format strictly as JSON with this schema:
                 enabled: false,
                 source: 'local_rule_engine',
                 fallback: true,
-                error: 'Failed to parse Grok response'
+                error: 'Failed to parse Groq response'
               }));
             }
           } else {
@@ -128,13 +130,13 @@ Format strictly as JSON with this schema:
               enabled: false,
               source: 'local_rule_engine',
               fallback: true,
-              error: `Grok API error: ${grokRes.statusCode}`
+              error: `Groq API error: ${groqRes.statusCode}`
             }));
           }
         });
       });
 
-      grokReq.on('error', (err) => {
+      groqReq.on('error', (err) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({
@@ -145,8 +147,8 @@ Format strictly as JSON with this schema:
         }));
       });
 
-      grokReq.write(postData);
-      grokReq.end();
+      groqReq.write(postData);
+      groqReq.end();
 
     } catch (err) {
       res.statusCode = 400;

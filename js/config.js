@@ -17,7 +17,7 @@ const CONFIG = {
     WEATHER: 'https://api.open-meteo.com/v1/forecast',
     AIR_QUALITY_FORECAST: 'https://air-quality-api.open-meteo.com/v1/air-quality',
     WAQI_FEED: 'https://api.waqi.info/feed',
-    GROK_PROXY: '/api/grok/recommendations'
+    GROQ_PROXY: '/api/groq/recommendations'
   },
 
   // Default fallback WAQI token (can be overridden by user in settings)

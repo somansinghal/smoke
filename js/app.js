@@ -452,10 +452,10 @@
     const cat = AQI_SCALE.getCategory(aqi).id;
     const dominant = state.airQuality.dominantPollutant;
 
-    // Check optional Grok AI proxy first (if server is configured)
+    // Check optional Groq AI proxy first (if server is configured)
     let aiRecs = null;
     try {
-      aiRecs = await GROK_CLIENT.getRecommendations({
+      aiRecs = await GROQ_CLIENT.getRecommendations({
         aqi: aqi,
         category: cat,
         dominantPollutant: dominant,
@@ -469,7 +469,7 @@
     let recsData = null;
     if (aiRecs && aiRecs.enabled && aiRecs.cards) {
       recsData = aiRecs;
-      DOM.engineStatusText.textContent = 'Grok AI Environmental Assistant (Secure Server Proxy • Zero PII)';
+      DOM.engineStatusText.textContent = 'Groq AI Environmental Assistant (Secure Server Proxy • Zero PII)';
     } else {
       // Local Explainable Rule Engine (Default zero-cost, 100% private)
       recsData = RECOMMENDATION_ENGINE.generate({

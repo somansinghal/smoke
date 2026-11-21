@@ -1,9 +1,9 @@
-// Optional Grok AI Client Integration
+// Optional Groq AI Client Integration
 // Communicates ONLY with secure server-side proxy
 // Zero API keys in client-side code
 // Never sends personal health or exact location coordinates to AI
 
-const GROK_CLIENT = {
+const GROQ_CLIENT = {
   /**
    * Request AI recommendations from server proxy if available
    * Returns null or falls back gracefully to rule engine
@@ -30,7 +30,7 @@ const GROK_CLIENT = {
         householdSummary: householdLabels
       };
 
-      const response = await fetch(CONFIG.API.GROK_PROXY, {
+      const response = await fetch(CONFIG.API.GROQ_PROXY, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -44,7 +44,7 @@ const GROK_CLIENT = {
       if (result.enabled && result.data && result.data.cards) {
         return {
           enabled: true,
-          source: 'grok_ai',
+          source: 'groq_ai',
           summary: result.data.summary,
           cards: result.data.cards.map(c => ({
             category: c.category,
@@ -69,5 +69,5 @@ const GROK_CLIENT = {
 };
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = GROK_CLIENT;
+  module.exports = GROQ_CLIENT;
 }

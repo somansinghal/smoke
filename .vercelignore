@@ -7,3 +7,6 @@ playwright.config.js
 .git
 .github
 node_modules/
+.env
+.env.*
+!.env.example

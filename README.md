@@ -23,7 +23,7 @@
 - **Ground Sensor vs Model Transparency**: Clearly distinguishes between live physical ground stations and numerical atmospheric models (Copernicus CAMS via Open-Meteo).
 - **Hourly Forecast & Trend**: 12-hour projections for temperature, rain probability, and AQI progression.
 - **Interactive Educational Guide**: Plain-language breakdown of AQI bands and key pollutants: PM2.5, PM10, Ozone ($O_3$), Nitrogen Dioxide ($NO_2$), Sulfur Dioxide ($SO_2$), and Carbon Monoxide ($CO$).
-- **Privacy-First & Zero-Cost Architecture**: Fully functional out of the box with zero required API keys. Optional Grok AI assistance is supported strictly through a secure server-side proxy—no API keys in client-side code, and no health or location data sent to AI.
+- **Privacy-First & Zero-Cost Architecture**: Fully functional out of the box with zero required API keys. Optional Groq AI assistance is supported strictly through a secure server-side proxy—no API keys in client-side code, and no health or location data sent to AI.
 - **Accessibility & Reduced Motion**: Full keyboard navigation, visible focus indicators, high contrast colors with text/icon reinforcement, and `@media (prefers-reduced-motion: reduce)` support that gracefully displays static graphics in place of animated elements.
 
 ---
@@ -111,16 +111,21 @@ SmogWise is designed to run anywhere with zero hassle. You can host it as a pure
 
 ---
 
-### Option B: Node.js Hosting with Optional Grok AI Proxy (Render / Railway / Fly.io)
-If you wish to enable the optional Grok AI proxy server:
-
-1. Deploy the repository to **Render** or **Railway** as a Node.js web service.
-2. Set the start command: `node server.js`.
-3. Set optional environment variable:
+### Option B: Vercel (static HTML + Groq serverless proxy)
+1. Deploy this repo to Vercel with **Framework Preset: Other** (or leave `vercel.json` `"framework": null`).
+2. Do **not** use `server.js` as the Vercel entrypoint — static files are served from the repo root; only `/api/*` runs as serverless functions.
+3. Optionally set the Vercel environment variable:
    ```env
-   GROK_API_KEY=xai-your-api-key-here
-   PORT=3456
+   GROQ_API_KEY=your_groq_api_key_here
    ```
+4. Homepage is `index.html` at `/`. AI proxy: `POST /api/groq/recommendations`.
+
+### Option C: Local Node server (optional Groq proxy)
+For local development with the optional Groq proxy:
+
+1. Copy `.env.example` to `.env` and set `GROQ_API_KEY` if desired.
+2. Run `npm start` (`node server.js` on port 3456).
+3. `server.js` is excluded from Vercel via `.vercelignore` and is only for local use.
 
 ---
 
@@ -132,7 +137,7 @@ If you wish to enable the optional Grok AI proxy server:
 | **Open-Meteo Geocoding** | **Free** | No API Key needed | Fast global city & coordinate search. |
 | **Open-Meteo Air Quality** | **Free** | No API Key needed | Hourly CAMS atmospheric model forecast backup. |
 | **WAQI (aqicn.org)** | **Free** | Built-in public demo token | Pre-configured. Users can optionally input their personal free token in app settings. |
-| **xAI Grok API** | **Paid (Optional)** | `GROK_API_KEY` on server | Optional server-side proxy only. Never exposed in browser JavaScript. Local rule engine handles 100% of features for free if omitted. |
+| **Groq API** | **Optional** | `GROQ_API_KEY` on server / Vercel | Optional server-side proxy only (`/api/groq/recommendations`). Never exposed in browser JavaScript. Local rule engine handles 100% of features for free if omitted. |
 
 ### How to get a free personal WAQI token (Optional)
 1. Visit [aqicn.org/data-platform/token/](https://aqicn.org/data-platform/token/).
@@ -149,13 +154,14 @@ smoke/
 ├── 404.html                     # Custom styled 404 not-found page with home return link
 ├── robots.txt                   # Search engine crawler instructions
 ├── sitemap.xml                  # XML Sitemap for search indexing
-├── vercel.json                  # Vercel configuration (clean URLs)
-├── .vercelignore                # Excludes server.js and test artifacts from Vercel static build
+├── vercel.json                  # Static site + serverless API (framework: null)
+├── .vercelignore                # Excludes server.js and test artifacts from Vercel
+├── .env.example                 # Placeholder env var names only (no secrets)
 ├── api/
 │   ├── status.js                # Vercel Serverless Function (/api/status)
-│   └── grok/
-│       └── recommendations.js   # Vercel Serverless Function (/api/grok/recommendations)
-├── server.js                    # Zero-dependency local Node.js HTTP server & Grok proxy
+│   └── groq/
+│       └── recommendations.js   # Vercel Serverless Function (/api/groq/recommendations)
+├── server.js                    # Local-only Node HTTP server & Groq proxy (not used on Vercel)
 ├── package.json                 # Scripts and development dependencies
 ├── playwright.config.js         # Playwright test & recording configuration
 ├── logo.png                     # Official SmogWise logo (reused)
@@ -170,7 +176,7 @@ smoke/
 │   ├── demo-data.js             # 5 rich Indian mock presets (Munnar, Bengaluru, Mumbai, Delhi, NCR)
 │   ├── recommendations.js       # Transparent, explainable JavaScript rule-based engine
 │   ├── api.js                   # Unified Open-Meteo + WAQI data service with fallback
-│   ├── grok-client.js           # Client wrapper for optional server proxy (zero PII)
+│   ├── groq-client.js           # Client wrapper for optional Groq server proxy (zero PII)
 │   └── app.js                   # Main application coordinator, geolocation, storage, UI
 ├── tests/
 │   └── smogwise.spec.js         # Comprehensive Playwright E2E browser tests (24 passed)
