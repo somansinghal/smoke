@@ -202,12 +202,19 @@ Format strictly as JSON with this schema:
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
-      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(`<!DOCTYPE html><html><head><title>404 Not Found</title></head><body style="font-family:sans-serif;text-align:center;padding:50px;">
-        <h1>404 - Page Not Found</h1>
-        <p>The requested resource was not found on SmogWise.</p>
-        <p><a href="/" style="color:#2e7d32;text-decoration:none;font-weight:bold;">Return to SmogWise Home</a></p>
-      </body></html>`);
+      const notFoundPath = path.join(__dirname, '404.html');
+      fs.readFile(notFoundPath, (notErr, notData) => {
+        res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+        if (!notErr && notData) {
+          res.end(notData);
+        } else {
+          res.end(`<!DOCTYPE html><html><head><title>404 Not Found</title></head><body style="font-family:sans-serif;text-align:center;padding:50px;">
+            <h1>404 - Page Not Found</h1>
+            <p>The requested resource was not found on SmogWise.</p>
+            <p><a href="/" style="color:#2e7d32;text-decoration:none;font-weight:bold;">Return to SmogWise Home</a></p>
+          </body></html>`);
+        }
+      });
       return;
     }
 

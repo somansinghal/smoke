@@ -305,6 +305,109 @@ test.describe('SmogWise E2E Tests & UI Verification', () => {
     await expect(page.locator('.toast.toast-warning')).toBeVisible();
   });
 
+  test('SEO metadata, Open Graph, Twitter cards, and Schema.org structured data', async ({ page }) => {
+    await setupMocks(page);
+    await page.goto('/');
+
+    // Check Title and Meta Description
+    await expect(page).toHaveTitle(/SmogWise — Local Air Quality, Weather & Practical Pollution Guidance/);
+    const metaDesc = page.locator('meta[name="description"]');
+    await expect(metaDesc).toHaveAttribute('content', /Understand hyperlocal air quality and weather near you/);
+
+    // Check Canonical URL
+    const canonical = page.locator('link[rel="canonical"]');
+    await expect(canonical).toHaveAttribute('href', 'https://smokewise.vercel.app/');
+
+    // Check Open Graph & Twitter Cards
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', 'https://smokewise.vercel.app/');
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://smokewise.vercel.app/logo.png');
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+    await expect(page.locator('meta[name="twitter:site"]')).toHaveAttribute('content', '@SomanSinghal');
+
+    // Check JSON-LD Structured Data
+    const jsonLdScript = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLdScript).toBeAttached();
+    const jsonLdContent = await jsonLdScript.textContent();
+    const parsed = JSON.parse(jsonLdContent || '{}');
+    expect(parsed['@context']).toBe('https://schema.org');
+    expect(parsed['@graph']).toBeDefined();
+    expect(parsed['@graph'][0].url).toBe('https://smokewise.vercel.app/');
+    expect(parsed['@graph'][0].creator.name).toBe('Soman Singhal');
+  });
+
+  test('Creator attribution in footer with valid accessible links', async ({ page }) => {
+    await setupMocks(page);
+    await page.goto('/');
+
+    const creatorSection = page.locator('.footer-creator-section');
+    await expect(creatorSection).toBeVisible();
+    await expect(creatorSection).toContainText('Created by Soman Singhal');
+
+    // Check Portfolio
+    const portfolioLink = creatorSection.locator('a[href="https://somansinghal.vercel.app"]');
+    await expect(portfolioLink).toBeVisible();
+    await expect(portfolioLink).toHaveAttribute('target', '_blank');
+    await expect(portfolioLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+    // Check GitHub
+    const githubLink = creatorSection.locator('a[href="https://github.com/somansinghal"]');
+    await expect(githubLink).toBeVisible();
+    await expect(githubLink).toHaveAttribute('target', '_blank');
+
+    // Check LinkedIn
+    const linkedinLink = creatorSection.locator('a[href="https://www.linkedin.com/in/soman-singhal"]');
+    await expect(linkedinLink).toBeVisible();
+    await expect(linkedinLink).toHaveAttribute('target', '_blank');
+
+    // Check X
+    const xLink = creatorSection.locator('a[href="https://x.com/SomanSinghal"]');
+    await expect(xLink).toBeVisible();
+    await expect(xLink).toHaveAttribute('target', '_blank');
+
+    // Check Instagram
+    const instaLink = creatorSection.locator('a[href="https://www.instagram.com/_somansinghal"]');
+    await expect(instaLink).toBeVisible();
+    await expect(instaLink).toHaveAttribute('target', '_blank');
+
+    // Check Email
+    const emailLink = creatorSection.locator('a[href="mailto:mailto@gmail.com"]');
+    await expect(emailLink).toBeVisible();
+  });
+
+  test('India-only demo data verification and quick city chips', async ({ page }) => {
+    await setupMocks(page);
+    await page.goto('/');
+
+    // Check Demo options are Indian locations
+    const demoOptions = await page.locator('#demo-select option').allTextContents();
+    const demoOptionsJoined = demoOptions.join(' ');
+    expect(demoOptionsJoined).toContain('Munnar, Kerala');
+    expect(demoOptionsJoined).toContain('Bengaluru, Karnataka');
+    expect(demoOptionsJoined).toContain('Mumbai, Maharashtra');
+    expect(demoOptionsJoined).toContain('Delhi NCR');
+    expect(demoOptionsJoined).not.toContain('Honolulu');
+    expect(demoOptionsJoined).not.toContain('London');
+
+    // Select Munnar, Kerala demo
+    await page.locator('#demo-select').selectOption('good');
+    await expect(page.locator('#location-display-name')).toContainText('Munnar, Kerala');
+    await expect(page.locator('#data-source-badge')).toHaveText('Sample Demo Data');
+    await expect(page.locator('#cpcb-banner-container')).toBeVisible();
+
+    // Check quick chips are all Indian cities
+    const chipTexts = await page.locator('.quick-city-chip').allTextContents();
+    expect(chipTexts).toEqual(['New Delhi', 'Mumbai', 'Bengaluru', 'Kolkata', 'Chennai', 'Hyderabad']);
+  });
+
+  test('404 Not Found page has working link back to homepage', async ({ page }) => {
+    await page.goto('/some-nonexistent-path-12345');
+    await expect(page.locator('h1')).toContainText('Page Not Found');
+    const homeLink = page.locator('a[href="/"]').first();
+    await expect(homeLink).toBeVisible();
+    await homeLink.click();
+    await expect(page).toHaveURL(/.*:(3456)?\/$/);
+  });
+
   test('Main user flow video recording walkthrough', async ({ page }) => {
     await setupMocks(page);
     await page.goto('/');

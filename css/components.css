@@ -1033,6 +1033,56 @@
   color: #92b5a5;
 }
 
+/* =========================================
+   Creator Attribution (Understated & Accessible)
+   ========================================= */
+.footer-creator-section {
+  border-top: 1px solid #1e4533;
+  padding: 1.25rem 0;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.creator-info {
+  font-size: 0.925rem;
+  color: #cfe3da;
+}
+
+.creator-info strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.creator-links-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.creator-link {
+  color: #b7d1c6;
+  text-decoration: none;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.15s ease;
+}
+
+.creator-link:hover, .creator-link:focus-visible {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .disclaimer-box {
   background: #143525;
   border: 1px solid #23543b;

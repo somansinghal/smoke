@@ -296,7 +296,14 @@
     DOM.stationScaleBadge.textContent = `Scale: ${station.scale}`;
 
     // Source badge
-    if (station.isLiveStation) {
+    if (station.isDemo || state.isDemoMode) {
+      DOM.dataSourceBadge.className = 'badge badge-demo';
+      DOM.dataSourceBadge.textContent = 'Sample Demo Data';
+      DOM.modelNoticeContainer.style.display = 'block';
+      if (DOM.modelNoticeText) {
+        DOM.modelNoticeText.innerHTML = `Showing <strong>Sample Demo Scenario (${loc.name})</strong>. Simulated test data for educational demonstration — not a live ground measurement.`;
+      }
+    } else if (station.isLiveStation) {
       DOM.dataSourceBadge.className = 'badge badge-live';
       DOM.dataSourceBadge.textContent = 'Live Ground Station';
       DOM.modelNoticeContainer.style.display = 'none';
@@ -654,7 +661,7 @@
       name: data.cityName,
       lat: data.lat,
       lng: data.lng,
-      country: data.name.includes('India') ? 'India' : (data.name.includes('UK') ? 'United Kingdom' : 'United States')
+      country: 'India'
     };
 
     state.weather = data.weather;
@@ -792,7 +799,7 @@
         const lat = parseFloat(chip.dataset.lat);
         const lng = parseFloat(chip.dataset.lng);
         const name = chip.dataset.name;
-        const country = name.includes('India') ? 'India' : (name.includes('UK') ? 'United Kingdom' : 'United States');
+        const country = 'India';
         fetchLocationData({ name, lat, lng, country });
       });
     });

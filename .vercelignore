@@ -1,0 +1,9 @@
+server.js
+test-results/
+screenshots/
+recordings/
+tests/
+playwright.config.js
+.git
+.github
+node_modules/

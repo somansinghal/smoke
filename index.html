@@ -3,9 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmogWise — Breathe better. Live wiser.</title>
-  <meta name="description" content="SmogWise provides real-time air quality index (AQI), weather forecasts, and explainable personalized health do's and don'ts for your daily life.">
+  <title>SmogWise — Local Air Quality, Weather & Practical Pollution Guidance</title>
+  <meta name="description" content="Understand hyperlocal air quality and weather near you. Learn what AQI and individual pollutants (PM2.5, PM10, O3, NO2, SO2, CO) mean with practical, personalized daily do's and don'ts.">
+  <link rel="canonical" href="https://smokewise.vercel.app/">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SmogWise">
+  <meta property="og:title" content="SmogWise — Breathe better. Live wiser.">
+  <meta property="og:description" content="Real-time air quality index (AQI), local weather, educational pollutant breakdowns, and explainable personalized health guidance.">
+  <meta property="og:url" content="https://smokewise.vercel.app/">
+  <meta property="og:image" content="https://smokewise.vercel.app/logo.png">
+  <meta property="og:image:alt" content="SmogWise Clean Air Logo">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SomanSinghal">
+  <meta name="twitter:creator" content="@SomanSinghal">
+  <meta name="twitter:title" content="SmogWise — Breathe better. Live wiser.">
+  <meta name="twitter:description" content="Hyperlocal weather, AQI monitoring, educational pollutant breakdowns, and explainable personalized health guidance.">
+  <meta name="twitter:image" content="https://smokewise.vercel.app/logo.png">
+
+  <!-- Favicons and Theme Color -->
   <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <meta name="theme-color" content="#1b4332">
+
+  <!-- Structured Data (Schema.org JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://smokewise.vercel.app/#website",
+        "url": "https://smokewise.vercel.app/",
+        "name": "SmogWise",
+        "description": "Hyperlocal weather, air quality index monitoring, educational pollutant guides, and explainable health guidance.",
+        "inLanguage": "en",
+        "creator": {
+          "@type": "Person",
+          "name": "Soman Singhal",
+          "url": "https://somansinghal.vercel.app",
+          "sameAs": [
+            "https://github.com/somansinghal",
+            "https://www.linkedin.com/in/soman-singhal",
+            "https://x.com/SomanSinghal",
+            "https://www.instagram.com/_somansinghal"
+          ]
+        }
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://smokewise.vercel.app/#webapp",
+        "name": "SmogWise",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "url": "https://smokewise.vercel.app/",
+        "creator": {
+          "@type": "Person",
+          "name": "Soman Singhal",
+          "url": "https://somansinghal.vercel.app"
+        }
+      }
+    ]
+  }
+  </script>
 
   <!-- Core Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
@@ -88,24 +152,25 @@
             <ul id="search-dropdown-list" class="search-dropdown" role="listbox" aria-label="City suggestions"></ul>
           </div>
 
-          <!-- Quick City Chips & Demo Selector -->
-          <div class="quick-cities" aria-label="Popular cities and test scenarios">
+          <!-- Quick City Chips & Demo Selector (India Locations Only) -->
+          <div class="quick-cities" aria-label="Popular Indian cities and test scenarios">
             <span class="quick-label">Try:</span>
             <button type="button" class="chip quick-city-chip" data-lat="28.6139" data-lng="77.2090" data-name="New Delhi, India">New Delhi</button>
-            <button type="button" class="chip quick-city-chip" data-lat="51.5074" data-lng="-0.1278" data-name="London, UK">London</button>
-            <button type="button" class="chip quick-city-chip" data-lat="40.7128" data-lng="-74.0060" data-name="New York, USA">New York</button>
-            <button type="button" class="chip quick-city-chip" data-lat="35.6762" data-lng="139.6503" data-name="Tokyo, Japan">Tokyo</button>
-            <button type="button" class="chip quick-city-chip" data-lat="34.0522" data-lng="-118.2437" data-name="Los Angeles, USA">Los Angeles</button>
+            <button type="button" class="chip quick-city-chip" data-lat="19.0760" data-lng="72.8777" data-name="Mumbai, India">Mumbai</button>
+            <button type="button" class="chip quick-city-chip" data-lat="12.9716" data-lng="77.5946" data-name="Bengaluru, India">Bengaluru</button>
+            <button type="button" class="chip quick-city-chip" data-lat="22.5726" data-lng="88.3639" data-name="Kolkata, India">Kolkata</button>
+            <button type="button" class="chip quick-city-chip" data-lat="13.0827" data-lng="80.2707" data-name="Chennai, India">Chennai</button>
+            <button type="button" class="chip quick-city-chip" data-lat="17.3850" data-lng="78.4867" data-name="Hyderabad, India">Hyderabad</button>
 
-            <!-- Demo Mode Selector -->
+            <!-- Demo Mode Selector (India Locations Only) -->
             <label for="demo-select" class="sr-only">Switch Demo Preset</label>
-            <select id="demo-select" class="chip" style="cursor:pointer;font-weight:600;background:#fef3c7;border-color:#fde68a;color:#92400e;" title="Load test scenarios with mock data">
-              <option value="">🧪 Demo Scenarios...</option>
-              <option value="good">🟢 Good (Honolulu - AQI 24)</option>
-              <option value="moderate">🟡 Moderate (London - AQI 72)</option>
-              <option value="sensitive">🟠 Sensitive Groups (LA - AQI 128)</option>
-              <option value="unhealthy">🔴 Unhealthy (Delhi - AQI 188)</option>
-              <option value="hazardous">🟣 Hazardous (Wildfire - AQI 348)</option>
+            <select id="demo-select" class="chip" style="cursor:pointer;font-weight:600;background:#fef3c7;border-color:#fde68a;color:#92400e;" title="Load test scenarios with mock data (India only)">
+              <option value="">🧪 Demo Scenarios (India)...</option>
+              <option value="good">🟢 Good (Munnar, Kerala - AQI 24)</option>
+              <option value="moderate">🟡 Moderate (Bengaluru, Karnataka - AQI 72)</option>
+              <option value="sensitive">🟠 Sensitive Groups (Mumbai, Maharashtra - AQI 128)</option>
+              <option value="unhealthy">🔴 Unhealthy (Delhi NCR, India - AQI 188)</option>
+              <option value="hazardous">🟣 Hazardous (Severe Inversion Smog - AQI 348)</option>
             </select>
           </div>
         </div>
@@ -398,6 +463,45 @@
           </ul>
         </div>
       </div>
+
+      <!-- Creator Attribution (Understated & Accessible) -->
+      <section class="footer-creator-section" aria-label="Creator Information">
+        <div class="creator-info">
+          <span>Created by <strong>Soman Singhal</strong></span>
+        </div>
+        <ul class="creator-links-list" role="list" aria-label="Soman Singhal Links">
+          <li>
+            <a href="https://somansinghal.vercel.app" target="_blank" rel="noopener noreferrer" class="creator-link" aria-label="Soman Singhal Portfolio (opens in a new tab)">
+              <span aria-hidden="true">🌐</span> Portfolio
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/somansinghal" target="_blank" rel="noopener noreferrer" class="creator-link" aria-label="Soman Singhal GitHub (opens in a new tab)">
+              <span aria-hidden="true">💻</span> GitHub
+            </a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/soman-singhal" target="_blank" rel="noopener noreferrer" class="creator-link" aria-label="Soman Singhal LinkedIn (opens in a new tab)">
+              <span aria-hidden="true">💼</span> LinkedIn
+            </a>
+          </li>
+          <li>
+            <a href="https://x.com/SomanSinghal" target="_blank" rel="noopener noreferrer" class="creator-link" aria-label="Soman Singhal on X (opens in a new tab)">
+              <span aria-hidden="true">🐦</span> X
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/_somansinghal" target="_blank" rel="noopener noreferrer" class="creator-link" aria-label="Soman Singhal on Instagram (opens in a new tab)">
+              <span aria-hidden="true">📸</span> Instagram
+            </a>
+          </li>
+          <li>
+            <a href="mailto:mailto@gmail.com" class="creator-link" aria-label="Send email to Soman Singhal">
+              <span aria-hidden="true">✉️</span> Email
+            </a>
+          </li>
+        </ul>
+      </section>
 
       <div class="footer-bottom">
         <span>© 2026 SmogWise Project. Built with vanilla HTML, CSS, and JavaScript.</span>

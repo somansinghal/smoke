@@ -145,29 +145,51 @@ If you wish to enable the optional Grok AI proxy server:
 
 ```
 smoke/
-├── index.html                   # Semantic HTML5 single-page application
-├── server.js                    # Zero-dependency Node.js HTTP server & secure Grok proxy
+├── index.html                   # Semantic HTML5 single-page application (Root entry)
+├── 404.html                     # Custom styled 404 not-found page with home return link
+├── robots.txt                   # Search engine crawler instructions
+├── sitemap.xml                  # XML Sitemap for search indexing
+├── vercel.json                  # Vercel configuration (clean URLs)
+├── .vercelignore                # Excludes server.js and test artifacts from Vercel static build
+├── api/
+│   ├── status.js                # Vercel Serverless Function (/api/status)
+│   └── grok/
+│       └── recommendations.js   # Vercel Serverless Function (/api/grok/recommendations)
+├── server.js                    # Zero-dependency local Node.js HTTP server & Grok proxy
 ├── package.json                 # Scripts and development dependencies
 ├── playwright.config.js         # Playwright test & recording configuration
 ├── logo.png                     # Official SmogWise logo (reused)
 ├── Gemini_Generated_Gif_qn92k2qn92k2qn92.gif # Official animation (reused)
 ├── css/
 │   ├── main.css                 # Base theme, typography, CSS variables, resets
-│   ├── components.css           # Navigation, cards, spectrum bar, modals, forms
+│   ├── components.css           # Navigation, cards, spectrum bar, modals, creator section
 │   └── responsive.css           # Mobile breakpoints & prefers-reduced-motion
 ├── js/
-│   ├── config.js                # App constants, storage keys, endpoints, presets
+│   ├── config.js                # App constants, Indian preset cities, endpoints
 │   ├── aqi-scale.js             # US EPA AQI breakpoints, CPCB NAQI notes, pollutant info
-│   ├── demo-data.js             # 5 rich mock presets (Good, Moderate, Sensitive, Unhealthy, Hazardous)
+│   ├── demo-data.js             # 5 rich Indian mock presets (Munnar, Bengaluru, Mumbai, Delhi, NCR)
 │   ├── recommendations.js       # Transparent, explainable JavaScript rule-based engine
 │   ├── api.js                   # Unified Open-Meteo + WAQI data service with fallback
 │   ├── grok-client.js           # Client wrapper for optional server proxy (zero PII)
 │   └── app.js                   # Main application coordinator, geolocation, storage, UI
 ├── tests/
-│   └── smogwise.spec.js         # 17 Playwright E2E browser tests
+│   └── smogwise.spec.js         # Comprehensive Playwright E2E browser tests (24 passed)
 ├── screenshots/                 # Captured test screenshots (Desktop, Mobile, Search, etc.)
 └── recordings/                  # Screen recordings of user flows (.webm)
 ```
+
+---
+
+## 👨‍💻 Creator Attribution
+
+Created by **Soman Singhal**
+
+- **Portfolio**: [https://somansinghal.vercel.app](https://somansinghal.vercel.app)
+- **GitHub**: [@somansinghal](https://github.com/somansinghal)
+- **LinkedIn**: [Soman Singhal](https://www.linkedin.com/in/soman-singhal)
+- **X**: [@SomanSinghal](https://x.com/SomanSinghal)
+- **Instagram**: [@_somansinghal](https://www.instagram.com/_somansinghal)
+- **Email**: [mailto:mailto@gmail.com](mailto:mailto@gmail.com)
 
 ---
 
@@ -178,4 +200,3 @@ SmogWise standardizes readings to the **US EPA Air Quality Index (0–500)** as 
 
 ### Non-Medical Disclaimer
 SmogWise is an informational health-literacy tool. It cannot measure indoor air quality in your specific room, nor does it replace physician consultation or official civil emergency alerts.
-# smoke

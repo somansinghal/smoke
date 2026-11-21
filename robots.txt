@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://smokewise.vercel.app/sitemap.xml

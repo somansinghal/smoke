@@ -2,7 +2,6 @@
   "name": "smogwise",
   "version": "1.0.0",
   "description": "SmogWise - Breathe better. Live wiser. Environmental-health air quality and weather companion.",
-  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "playwright test",

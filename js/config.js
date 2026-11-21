@@ -28,16 +28,16 @@ const CONFIG = {
   CPCB_PORTAL_URL: 'https://airquality.cpcb.gov.in/AQI_India/',
   CPCB_NAME: 'Central Pollution Control Board (CPCB) Sameer Portal',
 
-  // Quick Preset Cities
+  // Quick Preset Cities (India Locations Only)
   POPULAR_CITIES: [
     { name: 'New Delhi', country: 'India', lat: 28.6139, lng: 77.2090 },
-    { name: 'London', country: 'United Kingdom', lat: 51.5074, lng: -0.1278 },
-    { name: 'New York', country: 'United States', lat: 40.7128, lng: -74.0060 },
-    { name: 'Tokyo', country: 'Japan', lat: 35.6762, lng: 139.6503 },
-    { name: 'Los Angeles', country: 'United States', lat: 34.0522, lng: -118.2437 },
     { name: 'Mumbai', country: 'India', lat: 19.0760, lng: 72.8777 },
-    { name: 'Paris', country: 'France', lat: 48.8566, lng: 2.3522 },
-    { name: 'Sydney', country: 'Australia', lat: -33.8688, lng: 151.2093 }
+    { name: 'Bengaluru', country: 'India', lat: 12.9716, lng: 77.5946 },
+    { name: 'Kolkata', country: 'India', lat: 22.5726, lng: 88.3639 },
+    { name: 'Chennai', country: 'India', lat: 13.0827, lng: 80.2707 },
+    { name: 'Hyderabad', country: 'India', lat: 17.3850, lng: 78.4867 },
+    { name: 'Pune', country: 'India', lat: 18.5204, lng: 73.8567 },
+    { name: 'Ahmedabad', country: 'India', lat: 23.0225, lng: 72.5714 }
   ]
 };
 
