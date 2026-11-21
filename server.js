@@ -1,14 +1,14 @@
-// SmogWise Local Server & Grok AI Proxy
+// SmogWise Local Server & Groq AI Proxy
+// For local development only (npm start). Not used on Vercel — see api/ serverless functions.
 // Plain Node.js without heavy framework dependencies
 
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
-const url = require('url');
 
 const PORT = process.env.PORT || 3456;
-const GROK_API_KEY = process.env.GROK_API_KEY || process.env.XAI_API_KEY || '';
+const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -29,7 +29,6 @@ const server = http.createServer((req, res) => {
   const reqUrl = new URL(req.url, `http://${req.headers.host || 'localhost:3456'}`);
   const pathname = reqUrl.pathname;
 
-  // Add standard CORS & security headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -40,28 +39,25 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // API Status & Configuration endpoint
   if (pathname === '/api/status' && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       status: 'online',
       service: 'SmogWise Server',
-      grokProxyConfigured: Boolean(GROK_API_KEY),
+      groqProxyConfigured: Boolean(GROQ_API_KEY),
       timestamp: new Date().toISOString()
     }));
     return;
   }
 
-  // Secure Server-Side Grok Proxy endpoint
-  // Only called if user or client tests AI recommendations
-  // Personal sensitive health data and exact GPS coordinates are NEVER forwarded
-  if (pathname === '/api/grok/recommendations' && req.method === 'POST') {
-    if (!GROK_API_KEY) {
+  // Secure server-side Groq proxy — never forwards GPS or personal health details
+  if (pathname === '/api/groq/recommendations' && req.method === 'POST') {
+    if (!GROQ_API_KEY) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({
         enabled: false,
         source: 'local_rule_engine',
-        message: 'Grok API key is not configured on the server. SmogWise is running in zero-cost, privacy-first mode using its local explainable rule engine.'
+        message: 'Groq API key is not configured on the server. SmogWise is running in zero-cost, privacy-first mode using its local explainable rule engine.'
       }));
       return;
     }
@@ -69,7 +65,6 @@ const server = http.createServer((req, res) => {
     let body = '';
     req.on('data', chunk => {
       body += chunk;
-      // Safeguard max body size 64KB
       if (body.length > 65536) {
         req.destroy();
       }
@@ -78,8 +73,6 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       try {
         const payload = JSON.parse(body || '{}');
-        
-        // Sanitize payload: strip any personal identifiers or location coordinates
         const safeContext = {
           aqi: Number(payload.aqi) || 50,
           category: String(payload.category || 'Moderate').slice(0, 40),
@@ -88,7 +81,7 @@ const server = http.createServer((req, res) => {
           humidity: Number(payload.humidity) || 50,
           windSpeed: Number(payload.windSpeed) || 10,
           weatherCondition: String(payload.weatherCondition || 'Clear').slice(0, 40),
-          householdSummary: Array.isArray(payload.householdSummary) 
+          householdSummary: Array.isArray(payload.householdSummary)
             ? payload.householdSummary.map(s => String(s).slice(0, 40)).slice(0, 5)
             : []
         };
@@ -116,35 +109,37 @@ Format strictly as JSON with this schema:
 }`;
 
         const postData = JSON.stringify({
-          model: 'grok-2-latest',
+          model: 'llama-3.3-70b-versatile',
           messages: [
-            { role: 'system', content: 'You are an environmental health advisor specializing in clean air guidelines.' },
+            { role: 'system', content: 'You are an environmental health advisor specializing in clean air guidelines. Respond with valid JSON only.' },
             { role: 'user', content: promptText }
           ],
           temperature: 0.3,
           response_format: { type: 'json_object' }
         });
 
-        const grokReq = https.request('https://api.x.ai/v1/chat/completions', {
+        const groqReq = https.request({
+          hostname: 'api.groq.com',
+          path: '/openai/v1/chat/completions',
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${GROK_API_KEY}`,
+            'Authorization': `Bearer ${GROQ_API_KEY}`,
             'Content-Length': Buffer.byteLength(postData)
           },
           timeout: 8000
-        }, (grokRes) => {
-          let grokData = '';
-          grokRes.on('data', chunk => { grokData += chunk; });
-          grokRes.on('end', () => {
-            if (grokRes.statusCode >= 200 && grokRes.statusCode < 300) {
+        }, (groqRes) => {
+          let groqData = '';
+          groqRes.on('data', chunk => { groqData += chunk; });
+          groqRes.on('end', () => {
+            if (groqRes.statusCode >= 200 && groqRes.statusCode < 300) {
               try {
-                const grokJson = JSON.parse(grokData);
-                const reply = grokJson.choices?.[0]?.message?.content;
+                const groqJson = JSON.parse(groqData);
+                const reply = groqJson.choices?.[0]?.message?.content;
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({
                   enabled: true,
-                  source: 'grok_ai',
+                  source: 'groq_ai',
                   data: JSON.parse(reply)
                 }));
               } catch (e) {
@@ -153,7 +148,7 @@ Format strictly as JSON with this schema:
                   enabled: false,
                   source: 'local_rule_engine',
                   fallback: true,
-                  error: 'Failed to parse Grok response'
+                  error: 'Failed to parse Groq response'
                 }));
               }
             } else {
@@ -162,13 +157,13 @@ Format strictly as JSON with this schema:
                 enabled: false,
                 source: 'local_rule_engine',
                 fallback: true,
-                error: `Grok API error: ${grokRes.statusCode}`
+                error: `Groq API error: ${groqRes.statusCode}`
               }));
             }
           });
         });
 
-        grokReq.on('error', (err) => {
+        groqReq.on('error', (err) => {
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({
             enabled: false,
@@ -178,8 +173,8 @@ Format strictly as JSON with this schema:
           }));
         });
 
-        grokReq.write(postData);
-        grokReq.end();
+        groqReq.write(postData);
+        groqReq.end();
 
       } catch (err) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -189,10 +184,8 @@ Format strictly as JSON with this schema:
     return;
   }
 
-  // Static File Serving
   let filePath = path.join(__dirname, pathname === '/' ? 'index.html' : pathname);
 
-  // Security check: prevent directory traversal
   const normalizedPath = path.normalize(filePath);
   if (!normalizedPath.startsWith(__dirname)) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });
@@ -233,5 +226,5 @@ Format strictly as JSON with this schema:
 
 server.listen(PORT, () => {
   console.log(`[SmogWise] Server running at http://localhost:${PORT}`);
-  console.log(`[SmogWise] Grok Proxy configured: ${Boolean(GROK_API_KEY)} (free explainable rule engine is default active)`);
+  console.log(`[SmogWise] Groq Proxy configured: ${Boolean(GROQ_API_KEY)} (free explainable rule engine is default active)`);
 });

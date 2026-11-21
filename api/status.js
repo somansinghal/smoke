@@ -16,7 +16,7 @@ module.exports = (req, res) => {
   res.end(JSON.stringify({
     status: 'online',
     service: 'SmogWise Server',
-    grokProxyConfigured: Boolean(process.env.GROK_API_KEY || process.env.XAI_API_KEY),
+    groqProxyConfigured: Boolean(process.env.GROQ_API_KEY),
     timestamp: new Date().toISOString()
   }));
 };
